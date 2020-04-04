@@ -1,6 +1,9 @@
+import bryghts._
+
 lazy val scala213 = "2.13.1"
 lazy val scala212 = "2.12.10"
 lazy val scala211 = "2.11.12"
+
 lazy val allScalaVersions = List(scala213, scala212, scala211)
 lazy val nativeScalaVersions = List(scala211)
 
@@ -13,22 +16,26 @@ val sharedSettings = Seq(
         allScalaVersions
     }
   , scalaVersion := scala211
+  , name := "high-priority"
 )
 
 lazy val root =
   // select supported platforms
-  crossProject(JSPlatform, JVMPlatform, NativePlatform)
-    .crossType(CrossType.Pure) // [Pure, Full, Dummy], default: CrossType.Full
-    .in(file("."))
-    .settings(sharedSettings)
-
-    .jsSettings( // defined in sbt-scalajs-crossproject
+  crossProject (JSPlatform, JVMPlatform, NativePlatform)
+    .crossType (CrossType.Pure) // [Pure, Full, Dummy], default: CrossType.Full
+    .in (file("."))
+    .settings (sharedSettings)
+    .settings(sourceGenerators in Compile += Def.task {
+       Generator.generate((Compile / sourceManaged).value)
+     }.taskValue
+     )
+    .jsSettings ( // defined in sbt-scalajs-crossproject
       scalaJSUseMainModuleInitializer := true
      )
-    .jvmSettings(/* ... */)
+    .jvmSettings (/* ... */)
 
     // configure Scala-Native settings
-    .nativeSettings( // defined in sbt-scala-native
+    .nativeSettings ( // defined in sbt-scala-native
       nativeLTO := "thin"
     )
 
