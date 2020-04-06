@@ -16,9 +16,9 @@ object Functor extends ProvidedTCF[Functor] {
 
 object Applicative extends ProvidedTCF[Applicative] {
   trait ApplicativeImplicits extends ToApplicativeOps {
-    implicit def functorProvider1[T[_]](
+    implicit def functorProvider[Priority1, T[_]](
         implicit b: Applicative[T]
-    ): Provider1[Functor[T]] = Provider1(b.asInstanceOf[Functor[T]])
+    ): Provider[Priority1, Functor[T]] = Provider(b.asInstanceOf[Functor[T]])
   }
 }
 
@@ -32,10 +32,11 @@ object Monad extends ProvidedTCF[Monad] {
   trait MonadImplicits extends ToMonadOps {
     implicit def provider1[T[_]](
         implicit c: Monad[T]
-    ): Provider1[Applicative[T]] = Provider1(c.asInstanceOf[Applicative[T]])
-    implicit def functorProvider2[T[_]](
+    ): Provider[Priority1, Applicative[T]] =
+      Provider(c.asInstanceOf[Applicative[T]])
+    implicit def functorProvider[Priority2, T[_]](
         implicit b: Monad[T]
-    ): Provider2[Functor[T]] = Provider2(b.asInstanceOf[Functor[T]])
+    ): Provider[Priority2, Functor[T]] = Provider(b.asInstanceOf[Functor[T]])
   }
 }
 
@@ -45,9 +46,9 @@ object Monad extends ProvidedTCF[Monad] {
 object Traverse extends ProvidedTCF[Traverse] {
 
   trait TraverseImplicits extends ToTraverseOps {
-    implicit def functorProvider3[T[_]](
+    implicit def functorProvider[Priority3, T[_]](
         implicit b: Traverse[T]
-    ): Provider3[Functor[T]] = Provider3(b.asInstanceOf[Functor[T]])
+    ): Provider[Priority3, Functor[T]] = Provider(b.asInstanceOf[Functor[T]])
   }
 }
 
