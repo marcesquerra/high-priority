@@ -7,7 +7,6 @@ lazy val scala211 = "2.11.12"
 lazy val allScalaVersions = List(scala213, scala212, scala211)
 lazy val nativeScalaVersions = List(scala211)
 
-
 val sharedSettings = Seq(
     crossScalaVersions := {
       if (crossProjectPlatform.value == NativePlatform)
@@ -17,6 +16,19 @@ val sharedSettings = Seq(
     }
   , scalaVersion := scala211
   , name := "high-priority"
+  , libraryDependencies += "org.typelevel" %% "simulacrum" % "1.0.0"
+  , libraryDependencies ++= {
+      if (scalaVersion.value == scala213)
+        Nil
+      else
+        Seq(compilerPlugin( "org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full ) )
+    }
+  , scalacOptions ++= {
+      if (scalaVersion.value == scala213)
+        Seq( "-Ymacro-annotations" )
+      else
+        Nil
+    }
 )
 
 lazy val root =
