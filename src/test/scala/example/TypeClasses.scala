@@ -7,18 +7,17 @@ import com.bryghts.highpriority._
   def map[A, B](fa: F[A])(f: A => B): F[B]
 }
 
-object Functor extends ProvidedTCF[Functor] {
+object Functor extends ProvidedTCF[Priority1, Functor] {
   trait FunctorImplicits extends ToFunctorOps
 }
 
 @typeclass trait Applicative[T[_]] { self: Functor[T] =>
 }
 
-object Applicative extends ProvidedTCF[Applicative] {
+object Applicative extends ProvidedTCF[Priority10, Applicative] {
   trait ApplicativeImplicits extends ToApplicativeOps {
-    implicit def functorProvider[Priority1, T[_]](
-        implicit b: Applicative[T]
-    ): Provider[Priority1, Functor[T]] = Provider(b.asInstanceOf[Functor[T]])
+    implicit def toFunctor[T[_]](implicit b: Applicative[T]): To[Functor[T]] =
+      impl
   }
 }
 
@@ -27,28 +26,22 @@ object Applicative extends ProvidedTCF[Applicative] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
 }
 
-object Monad extends ProvidedTCF[Monad] {
+object Monad extends ProvidedTCF[Priority20, Monad] {
 
   trait MonadImplicits extends ToMonadOps {
-    implicit def provider1[T[_]](
-        implicit c: Monad[T]
-    ): Provider[Priority1, Applicative[T]] =
-      Provider(c.asInstanceOf[Applicative[T]])
-    implicit def functorProvider[Priority2, T[_]](
-        implicit b: Monad[T]
-    ): Provider[Priority2, Functor[T]] = Provider(b.asInstanceOf[Functor[T]])
+    implicit def toApplicative[T[_]](implicit c: Monad[T]): To[Applicative[T]] =
+      impl
+    implicit def toFunctor[T[_]](implicit b: Monad[T]): To[Functor[T]] = impl
   }
 }
 
 @typeclass trait Traverse[T[_]] { self: Functor[T] =>
   def c: String = "Traverse"
 }
-object Traverse extends ProvidedTCF[Traverse] {
+object Traverse extends ProvidedTCF[Priority30, Traverse] {
 
   trait TraverseImplicits extends ToTraverseOps {
-    implicit def functorProvider[Priority3, T[_]](
-        implicit b: Traverse[T]
-    ): Provider[Priority3, Functor[T]] = Provider(b.asInstanceOf[Functor[T]])
+    implicit def toFunctor[T[_]](implicit b: Traverse[T]): To[Functor[T]] = impl
   }
 }
 
