@@ -14,11 +14,8 @@ object Functor extends ProvidedTCF[Priority1, Functor] {
 @typeclass trait Applicative[T[_]] { self: Functor[T] =>
 }
 
-object Applicative extends ProvidedTCF[Priority10, Applicative] {
-  trait ApplicativeImplicits extends ToApplicativeOps {
-    implicit def toFunctor[T[_]](implicit b: Applicative[T]): To[Functor[T]] =
-      impl
-  }
+object Applicative extends ProvidedTCF1[Priority10, Applicative, Functor] {
+  trait ApplicativeImplicits extends PriorityImplicits with ToApplicativeOps
 }
 
 @typeclass trait Monad[F[_]] { self: Applicative[F] =>
@@ -26,23 +23,15 @@ object Applicative extends ProvidedTCF[Priority10, Applicative] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
 }
 
-object Monad extends ProvidedTCF[Priority20, Monad] {
-
-  trait MonadImplicits extends ToMonadOps {
-    implicit def toApplicative[T[_]](implicit c: Monad[T]): To[Applicative[T]] =
-      impl
-    implicit def toFunctor[T[_]](implicit b: Monad[T]): To[Functor[T]] = impl
-  }
+object Monad extends ProvidedTCF2[Priority20, Monad, Applicative, Functor] {
+  trait MonadImplicits extends PriorityImplicits with ToMonadOps
 }
 
 @typeclass trait Traverse[T[_]] { self: Functor[T] =>
   def c: String = "Traverse"
 }
-object Traverse extends ProvidedTCF[Priority30, Traverse] {
-
-  trait TraverseImplicits extends ToTraverseOps {
-    implicit def toFunctor[T[_]](implicit b: Traverse[T]): To[Functor[T]] = impl
-  }
+object Traverse extends ProvidedTCF1[Priority30, Traverse, Functor] {
+  trait TraverseImplicits extends PriorityImplicits with ToTraverseOps
 }
 
 package object typeclasses
