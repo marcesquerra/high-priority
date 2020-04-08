@@ -7,10 +7,6 @@ lazy val scala211 = "2.11.12"
 lazy val allScalaVersions = List(scala213, scala212, scala211)
 lazy val nativeScalaVersions = List(scala211)
 
-ThisBuild / organization := "com.bryghts"
-ThisBuild / description := "High Priority - Give implicits a numeric priority"
-
-licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 
 val sharedSettings = Seq(
     crossScalaVersions := {
@@ -19,6 +15,9 @@ val sharedSettings = Seq(
       else
         allScalaVersions
     }
+  , organization := "com.bryghts"
+  , description := "High Priority - Give implicits a numeric priority"
+  , licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
   , scalaVersion := scala211
   , name := "high-priority"
   , libraryDependencies += "org.typelevel" %% "simulacrum" % "1.0.0" % "test"
