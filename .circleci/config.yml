@@ -32,6 +32,11 @@ jobs:
             - v1-dependencies-
 
       - run: |
+          sudo apt-get update
+          sudo apt-get install clang libgc-dev
+          sudo apt-get install nodejs
+
+      - run: |
           cat /dev/null | sbt testAll publishAll
 
       - save_cache:
@@ -39,6 +44,4 @@ jobs:
             - ~/.m2
           key: v1-dependencies--{{ checksum "build.sbt" }}
 
-      # run tests!
-      - run: cat /dev/null | sbt test:test
 
