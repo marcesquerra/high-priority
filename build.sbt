@@ -7,6 +7,11 @@ lazy val scala211 = "2.11.12"
 lazy val allScalaVersions = List(scala213, scala212, scala211)
 lazy val nativeScalaVersions = List(scala211)
 
+ThisBuild / organization := "com.bryghts"
+ThisBuild / description := "High Priority - Give implicits a numeric priority"
+
+licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+
 val sharedSettings = Seq(
     crossScalaVersions := {
       if (crossProjectPlatform.value == NativePlatform)
@@ -30,6 +35,11 @@ val sharedSettings = Seq(
       else
         Nil
     }
+  , publishMavenStyle := true
+  , bintrayRepository := "jude"
+  , bintrayOrganization := Some("bryghts")
+  , git.useGitDescribe := true
+  , git.formattedShaVersion := git.gitHeadCommit.value map { sha => s"v${sha.take(5).toUpperCase}" }
 )
 
 lazy val root =
@@ -53,38 +63,50 @@ lazy val root =
     )
 
 addCommandAlias("buildNative", "rootNative/nativeLink")
-addCommandAlias("buildFullNative", "+rootNative/nativeLink")
+addCommandAlias("buildAllNative", "+rootNative/nativeLink")
 
 addCommandAlias("buildJS", "rootJS/compile")
-addCommandAlias("buildFullJS", "+rootJS/compile")
+addCommandAlias("buildAllJS", "+rootJS/compile")
 
 addCommandAlias("buildJVM", "rootJVM/compile")
-addCommandAlias("buildFullJVM", "+rootJVM/compile")
+addCommandAlias("buildAllJVM", "+rootJVM/compile")
 
-addCommandAlias("buildFull", "buildFullNative;buildFullJS;buildFullJVM")
+addCommandAlias("buildAll", "buildAllNative;buildAllJS;buildAllJVM")
 
 
 addCommandAlias("runNative", "rootNative/run")
-addCommandAlias("runFullNative", "+rootNative/run")
+addCommandAlias("runAllNative", "+rootNative/run")
 
 addCommandAlias("runJS", "rootJS/run")
-addCommandAlias("runFullJS", "+rootJS/run")
+addCommandAlias("runAllJS", "+rootJS/run")
 
 addCommandAlias("runJVM", "rootJVM/run")
-addCommandAlias("runFullJVM", "+rootJVM/run")
+addCommandAlias("runAllJVM", "+rootJVM/run")
 
-addCommandAlias("runFull", "runFullNative;runFullJS;runFullJVM")
+addCommandAlias("runAll", "runAllNative;runAllJS;runAllJVM")
 
 
 addCommandAlias("testNative", "rootNative/test")
-addCommandAlias("testFullNative", "+rootNative/test")
+addCommandAlias("testAllNative", "+rootNative/test")
 
 addCommandAlias("testJS", "rootJS/test")
-addCommandAlias("testFullJS", "+rootJS/test")
+addCommandAlias("testAllJS", "+rootJS/test")
 
 addCommandAlias("testJVM", "rootJVM/test")
-addCommandAlias("testFullJVM", "+rootJVM/test")
+addCommandAlias("testAllJVM", "+rootJVM/test")
 
-addCommandAlias("testFull", "testFullNative;testFullJS;testFullJVM")
+addCommandAlias("testAll", "testAllNative;testAllJS;testAllJVM")
 
-addCommandAlias("loop", "~;+rootNative/nativeLink;+rootJS/compile;+rootJVM/compile;runFullNative;runFullJS;runFullJVM")
+
+addCommandAlias("publishNative", "rootNative/publish")
+addCommandAlias("publishAllNative", "+rootNative/publish")
+
+addCommandAlias("publishJS", "rootJS/publish")
+addCommandAlias("publishAllJS", "+rootJS/publish")
+
+addCommandAlias("publishJVM", "rootJVM/publish")
+addCommandAlias("publishAllJVM", "+rootJVM/publish")
+
+addCommandAlias("publishAll", "publishAllNative;publishAllJS;publishAllJVM")
+
+addCommandAlias("loop", "~;+rootNative/nativeLink;+rootJS/compile;+rootJVM/compile;runAllNative;runAllJS;runAllJVM")
