@@ -46,6 +46,7 @@ lazy val root =
   crossProject (JSPlatform, JVMPlatform, NativePlatform)
     .crossType (CrossType.Pure) // [Pure, Full, Dummy], default: CrossType.Full
     .in (file("."))
+    .enablePlugins(GitVersioning)
     .settings (sharedSettings)
     .settings(sourceGenerators in Compile += Def.task {
        Generator.generate((Compile / sourceManaged).value)
