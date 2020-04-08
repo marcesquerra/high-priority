@@ -17,13 +17,14 @@ val sharedSettings = Seq(
   , scalaVersion := scala211
   , name := "high-priority"
   , libraryDependencies += "org.typelevel" %% "simulacrum" % "1.0.0" % "test"
+  , libraryDependencies += scalaOrganization.value % "scala-reflect" % scalaVersion.value % "provided"
   , libraryDependencies ++= {
       if (scalaVersion.value == scala213)
         Nil
       else
-        Seq(compilerPlugin( "org.scalamacros" % "paradise" % "2.1.0" % "test" cross CrossVersion.full ) )
+        Seq(compilerPlugin( "org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full ) )
     }
-  , Test / scalacOptions ++= {
+  , scalacOptions ++= {
       if (scalaVersion.value == scala213)
         Seq( "-Ymacro-annotations" )
       else
